@@ -1,0 +1,25 @@
+{
+	"name": "rest_api_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedService_Priya_S",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "pokemon_offset.csv",
+				"folderPath": "rest_api",
+				"fileSystem": "source"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

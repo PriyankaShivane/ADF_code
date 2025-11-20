@@ -1,0 +1,9 @@
+{
+	"name": "adf-practice-priya",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b1a36783-cc8b-4efe-a8a4-fa7ad381c558",
+		"tenantId": "0652bc6a-37a0-4d26-8514-45b21a55b206"
+	}
+}

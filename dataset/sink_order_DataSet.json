@@ -1,0 +1,21 @@
+{
+	"name": "sink_order_DataSet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedService_Priya_S",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Orders_data",
+				"fileSystem": "sink"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

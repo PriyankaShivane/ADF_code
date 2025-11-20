@@ -1,0 +1,26 @@
+{
+	"name": "trigger_event_based",
+	"properties": {
+		"description": "trigger the pipeline only when Fact_Sales_1.csv file loaded to source container under csvfiles folder.",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Execute_pipeline_child_parent",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/source/blobs/csvfiles",
+			"blobPathEndsWith": "Fact_Sales_1.csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/c90a612e-5701-4d52-ac2a-7e523675ff52/resourceGroups/RG-ADF-Practice/providers/Microsoft.Storage/storageAccounts/storageadfpriya",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

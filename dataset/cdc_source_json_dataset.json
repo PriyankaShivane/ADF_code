@@ -1,0 +1,21 @@
+{
+	"name": "cdc_source_json_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedService_Priya_S",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "cdc.json",
+				"folderPath": "CDC_date_json",
+				"fileSystem": "source"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

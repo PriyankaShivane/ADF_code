@@ -1,0 +1,23 @@
+{
+	"name": "empty_json_Dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedService_Priya_S",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "empty.json",
+				"folderPath": "CDC_date_json",
+				"fileSystem": "source"
+			}
+		},
+		"schema": {
+			"type": "object"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
