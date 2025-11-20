@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-practice-priya"
+		},
+		"AzureSqlDatabase_LS_password": {
+			"value": ""
+		},
+		"LinkedService_Priya_S_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase_LS_properties_typeProperties_server": {
+			"value": "priyasqlserver.database.windows.net"
+		},
+		"AzureSqlDatabase_LS_properties_typeProperties_database": {
+			"value": "priya_sql_db"
+		},
+		"AzureSqlDatabase_LS_properties_typeProperties_userName": {
+			"value": "priyaadmin"
+		},
+		"LinkedService_Priya_S_properties_typeProperties_url": {
+			"value": "https://storageadfpriya.dfs.core.windows.net/"
+		},
+		"Linked_Service_HttpServer_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com"
+		},
+		"REST_api_LS_properties_typeProperties_url": {
+			"value": "https://pokeapi.co/api/v2/pokemon"
+		},
+		"trigger_event_based_properties_typeProperties_scope": {
+			"value": "/subscriptions/c90a612e-5701-4d52-ac2a-7e523675ff52/resourceGroups/RG-ADF-Practice/providers/Microsoft.Storage/storageAccounts/storageadfpriya"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

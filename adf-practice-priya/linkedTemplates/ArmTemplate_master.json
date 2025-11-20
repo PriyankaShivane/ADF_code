@@ -1,0 +1,125 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-practice-priya"
+		},
+		"AzureSqlDatabase_LS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase_LS'"
+		},
+		"LinkedService_Priya_S_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LinkedService_Priya_S'"
+		},
+		"AzureSqlDatabase_LS_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "priyasqlserver.database.windows.net"
+		},
+		"AzureSqlDatabase_LS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "priya_sql_db"
+		},
+		"AzureSqlDatabase_LS_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "priyaadmin"
+		},
+		"LinkedService_Priya_S_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageadfpriya.dfs.core.windows.net/"
+		},
+		"Linked_Service_HttpServer_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://raw.githubusercontent.com"
+		},
+		"REST_api_LS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pokeapi.co/api/v2/pokemon"
+		},
+		"trigger_event_based_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/c90a612e-5701-4d52-ac2a-7e523675ff52/resourceGroups/RG-ADF-Practice/providers/Microsoft.Storage/storageAccounts/storageadfpriya"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-practice-priya_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabase_LS_password": {
+						"value": "[parameters('AzureSqlDatabase_LS_password')]"
+					},
+					"LinkedService_Priya_S_accountKey": {
+						"value": "[parameters('LinkedService_Priya_S_accountKey')]"
+					},
+					"AzureSqlDatabase_LS_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDatabase_LS_properties_typeProperties_server')]"
+					},
+					"AzureSqlDatabase_LS_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDatabase_LS_properties_typeProperties_database')]"
+					},
+					"AzureSqlDatabase_LS_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDatabase_LS_properties_typeProperties_userName')]"
+					},
+					"LinkedService_Priya_S_properties_typeProperties_url": {
+						"value": "[parameters('LinkedService_Priya_S_properties_typeProperties_url')]"
+					},
+					"Linked_Service_HttpServer_properties_typeProperties_url": {
+						"value": "[parameters('Linked_Service_HttpServer_properties_typeProperties_url')]"
+					},
+					"REST_api_LS_properties_typeProperties_url": {
+						"value": "[parameters('REST_api_LS_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adf-practice-priya_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"trigger_event_based_properties_typeProperties_scope": {
+						"value": "[parameters('trigger_event_based_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-practice-priya_ArmTemplate_0')]"
+			]
+		}
+	]
+}
