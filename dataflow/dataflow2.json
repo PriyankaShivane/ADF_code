@@ -14,9 +14,9 @@
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "reporting_csv_out",
-						"type": "DatasetReference"
+					"linkedService": {
+						"referenceName": "LinkedService_Priya_S",
+						"type": "LinkedServiceReference"
 					},
 					"name": "sinkdelta"
 				}
@@ -47,6 +47,18 @@
 				"sourcecsv alterRow(insertIf(1==1)) ~> alterRowUpsert",
 				"alterRowUpsert sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'reporting',",
+				"     folderPath: 'delta_out',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['customer_id'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
