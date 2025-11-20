@@ -2,6 +2,8 @@
 
 This is **Increametal Load Pipleline** which takes takes 3 parameters. All the acivities are handled dynamically.
 
+the Pipeline will ca. also be run for a backdate.
+
  
 
  <img width="975" height="619" alt="image" src="https://github.com/user-attachments/assets/8dd05afa-6843-437a-b5f0-bb1f7657cf53" />
