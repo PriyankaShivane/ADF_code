@@ -1,0 +1,70 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "fact_data_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sourcecsv"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedService_Priya_S",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkdelta"
+				}
+			],
+			"transformations": [
+				{
+					"name": "alterRowUpsert"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          transaction_id as string,",
+				"          transactional_date as string,",
+				"          product_id as string,",
+				"          customer_id as string,",
+				"          payment as string,",
+				"          credit_card as string,",
+				"          loyalty_card as string,",
+				"          cost as string,",
+				"          quantity as integer,",
+				"          price as integer,",
+				"          flag as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     purgeFiles: true) ~> sourcecsv",
+				"sourcecsv alterRow(insertIf(1==1)) ~> alterRowUpsert",
+				"alterRowUpsert sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'reporting',",
+				"     folderPath: 'delta_out',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['customer_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkdelta"
+			]
+		}
+	}
+}
