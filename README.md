@@ -1,109 +1,170 @@
-# Incremental Pipeline
+Incremental Load Pipeline using Azure Data Factory (ADF)
 
-This is **Increametal Load Pipleline** which takes takes 3 parameters. All the acivities are handled dynamically.
+**Description:**
 
-the Pipeline will ca. also be run for a backdate.
-
- 
-
- <img width="975" height="619" alt="image" src="https://github.com/user-attachments/assets/8dd05afa-6843-437a-b5f0-bb1f7657cf53" />
+Designed and implemented a robust Incremental Load Pipeline in Azure Data Factory to efficiently process delta records from Azure SQL Database into the data lake. The pipeline is parameter-driven and optimized to ensure only new or updated data is ingested, significantly improving performance and reducing processing costs.
 
 
+<img width="975" height="442" alt="image" src="https://github.com/user-attachments/assets/04a74d5d-2203-41f9-8be7-46c80b4a512f" />
 
-<img width="975" height="442" alt="image" src="https://github.com/user-attachments/assets/87294921-afaa-4911-bf18-f8de0e5161ab" />
-
-
-
-
-**Lookup_cdc_date Activity:** will fetch the last proceesed date i.e last_updated date stored in cdc_timestamp.json
-
- 
 
 
  
 
-<img width="975" height="651" alt="image" src="https://github.com/user-attachments/assets/92a37b5b-4616-4183-856d-e7594807997b" />
+**Impact & Outcomes**
+
+✔ Improved pipeline efficiency by avoiding full loads
+
+✔ Reduced execution time and compute cost
+
+✔ Enabled scalable ingestion across multiple tables
+
+✔ Ensured accurate, consistent CDC (Change Data Capture) tracking
+
+✔ Fully automated and production-ready incremental data ingestion flow
 
 
 
+**Key Features & Workflow**
+
+🔹 Parameter-Driven Pipeline
+
+The pipeline accepts three parameters:
+
+1. Schema
+
+2.	Table Name
+
+3.	Backdate (optional)
 
 
-Dataset details of Look_cdc_date Activity
-
-<img width="975" height="502" alt="image" src="https://github.com/user-attachments/assets/b1ff5cd2-2fb6-4c90-b28a-9cf886f97469" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-**Get row count Acitivity:** will count the incremental load rows.
-
-
-Query : select count(*) as total_count from @{pipeline().parameters.schema}.@{pipeline().parameters.table} where last_updated > '@{if(empty(pipeline().parameters.backdate), activity('Lookup_cdc_date').output.value[0].cdc_timestamp, pipeline().parameters.backdate)}'
-
-
-   <img width="975" height="651" alt="image" src="https://github.com/user-attachments/assets/d516dc88-22f4-4640-9dc5-87741a849d15" />
-
-
-
-**If Condition Acitivity:** will check if there are rows to process or not
-
-
-Condition used in expression builder: @greater(activity('get_row_count').output.resultSets[0].rows[0].total_count,0)
-
-If true then perform certain activities.
+This enables dynamic execution across multiple tables without code changes.
 
  
-<img width="975" height="574" alt="image" src="https://github.com/user-attachments/assets/12e1c6af-ac74-44d0-82ed-ed50fef28edb" />
+
+<img width="975" height="647" alt="image" src="https://github.com/user-attachments/assets/cfb0d4e0-b84a-440e-a032-faf36fd8dff5" />
 
 
 
 
-**Load_Incremental_data Acitivity:** this is a copy activity which Load incremental data to sink from azure sql database.
+
+
+	A **Lookup activity** retrieves the previously processed last_updated value stored in cdc_timestamp.json, ensuring accurate incremental capture.
+
+
+
+<img width="975" height="651" alt="image" src="https://github.com/user-attachments/assets/8e07a7df-f7d7-4fee-8264-4fcafad62f12" />
+
+
+ 
+
+DataSet used for Lookup activity.
+
+
+ 
+
+<img width="975" height="502" alt="image" src="https://github.com/user-attachments/assets/9724d059-790e-45e7-80e8-42a29320df9e" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**	Get_row_count Acitivity | Row Count Verification :**
+
+
+A SQL query mentioned in get_row_count checks whether new rows exist and will count the incremental load rows.
+
+SQL query:
+
+_select count(*) as total_count from @{pipeline().parameters.schema}.@{pipeline().parameters.table} where last_updated > '@{if(empty(pipeline().parameters.backdate), activity('Lookup_cdc_date').output.value[0].cdc_timestamp, pipeline().parameters.backdate)}'_
+
+
+
+
+<img width="975" height="689" alt="image" src="https://github.com/user-attachments/assets/10a3bdbb-848a-464d-958a-9f50a73ce020" />
+
+
+
+**	If Condition Activity**
+
+An If Condition activity validates if total_count > 0 using below mentioned expression.
+Only then the incremental load flow is triggered.
+
+Expression:
+
+_@greater(activity('get_row_count').output.resultSets[0].rows[0].total_count,0)_
+
+
+If true then perform below mentioned activities.
+
+ 
+
+
+<img width="975" height="612" alt="image" src="https://github.com/user-attachments/assets/afa98e54-0773-447e-86d6-f56fe5fd7e2d" />
+
+
+
+
+**🔹 Load_Incremental_data Acitivity | Incremental Data Copy**
+
+
+A Copy activity loads only the delta records based on the latest last_updated timestamp into the designated sink (data lake or target zone).
+Source query dynamically evaluates either the stored timestamp or the optional backdate.
+
 
 Source dataset query:
 
-select * from @{pipeline().parameters.schema}.@{pipeline().parameters.table} where last_updated > '@{if(empty(pipeline().parameters.backdate), activity('Lookup_cdc_date').output.value[0].cdc_timestamp, pipeline().parameters.backdate)}'
+_select * from @{pipeline().parameters.schema}.@{pipeline().parameters.table} where last_updated > '@{if(empty(pipeline().parameters.backdate), activity('Lookup_cdc_date').output.value[0].cdc_timestamp, pipeline().parameters.backdate)}'_
 
 
  
-<img width="975" height="669" alt="image" src="https://github.com/user-attachments/assets/008a4675-2d9a-4878-98ff-636ddb291fe1" />
+
+<img width="975" height="695" alt="image" src="https://github.com/user-attachments/assets/85269b3f-5aa4-4eb2-ae85-6d6c3edebe32" />
 
 
-**max_CDC Activity:** get_max_last_updated_date to update the JSON (cdc_timestamp)
+ 
+
+**🔹 max_CDC Activity | CDC Timestamp Update Logic**
+
+After the load is complete:
+
+•	A query calculates max(last_updated) from the source table.
+•	The value is written back to cdc_timestamp.json using a Copy activity to ensure the next run processes only newer records.
+
+Query:
+
+_select max(last_updated) as cdc_timestamp from @{pipeline().parameters.schema}.@{pipeline().parameters.table}_
 
 
-select max(last_updated) as cdc_timestamp from @{pipeline().parameters.schema}.@{pipeline().parameters.table}
 
 
- <img width="975" height="587" alt="image" src="https://github.com/user-attachments/assets/0052eba5-417c-428b-836f-04d172b99993" />
+<img width="975" height="708" alt="image" src="https://github.com/user-attachments/assets/654450a8-4f12-455c-a6eb-c1903b2bfc00" />
 
+  
 
-
-**load_cdc_timestamp_to_json Activity:** is a copy activity to load cdc_timestamp from empty json to main cdc json.
+**🔹 load_cdc_timestamp_to_json** : is a copy activity to load cdc_timestamp from empty json to main cdc json.
 
 Source dataset query:
 
-@activity('max_CDC').output.resultSets[0].rows[0].cdc_timestamp
+_@activity('max_CDC').output.resultSets[0].rows[0].cdc_timestamp_
 
-
- Sink: Point to main json
-
-
-
-<img width="975" height="607" alt="image" src="https://github.com/user-attachments/assets/77bc26eb-0319-4d9a-b179-e12f064117a1" />
+  
 
 
 
 
+
+<img width="975" height="727" alt="image" src="https://github.com/user-attachments/assets/982505cc-1aa5-4ac7-97b3-97254bfba88e" />
 
 
 
@@ -111,6 +172,16 @@ Source dataset query:
 
 
 
+
+
+
+
+
+**Sink: Point to main json.**
+
+
+
+<img width="975" height="644" alt="image" src="https://github.com/user-attachments/assets/b3f1d8d2-53ab-4549-a28e-b6ff3c2636c5" />
 
  
 
